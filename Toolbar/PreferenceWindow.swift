@@ -39,70 +39,15 @@ struct CustomTitleBarWithTabs: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TitleBarSection()
-            
             TabsSection()
         }
-        .background(.ultraThinMaterial, in: Rectangle())
+        .background(Color.clear)
         .overlay(
             Rectangle()
                 .fill(Color(NSColor.separatorColor))
                 .frame(height: 0.5),
             alignment: .bottom
         )
-    }
-}
-
-struct TitleBarSection: View {
-    var body: some View {
-        HStack {
-            TrafficLightButtons()
-            
-            Spacer()
-            
-            Text("Preferences")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(.primary)
-            
-            Spacer()
-            
-            HStack(spacing: 12) {
-                Spacer().frame(width: 60)
-            }
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 14)
-        .frame(height: 52)
-    }
-}
-
-struct TrafficLightButtons: View {
-    var body: some View {
-        HStack(spacing: 8) {
-            Circle()
-                .fill(Color.red)
-                .frame(width: 13, height: 13)
-                .overlay(
-                    Circle()
-                        .stroke(Color.red.opacity(0.3), lineWidth: 0.5)
-                )
-            
-            Circle()
-                .fill(Color.yellow)
-                .frame(width: 13, height: 13)
-                .overlay(
-                    Circle()
-                        .stroke(Color.yellow.opacity(0.3), lineWidth: 0.5)
-                )
-            
-            Circle()
-                .fill(Color.green)
-                .frame(width: 13, height: 13)
-                .overlay(
-                    Circle()
-                        .stroke(Color.green.opacity(0.3), lineWidth: 0.5)
-                )
-        }
     }
 }
 
