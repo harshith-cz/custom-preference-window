@@ -23,8 +23,8 @@ struct ToolbarApp: App {
                 .environment(settingsModel)
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 200, height: 200)
-        .windowStyle(.titleBar)
+        .defaultSize(width: 580, height: 500)
+        .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
     }
 
@@ -55,4 +55,3 @@ struct MainAppView: View {
         }
     }
 }
-
