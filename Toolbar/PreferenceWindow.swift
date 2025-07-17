@@ -25,55 +25,28 @@ struct SettingsWindow: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomTitleBarWithTabs()
-            
-            SettingsContentView()
-        }
-        .background(Color(NSColor.windowBackgroundColor))
-    }
-}
-
-struct CustomTitleBarWithTabs: View {
-    @Environment(SettingsModel.self) private var settings
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            TabsSection()
-        }
-        .background(Color.clear)
-        .overlay(
-            Rectangle()
-                .fill(Color(NSColor.separatorColor))
-                .frame(height: 0.5),
-            alignment: .bottom
-        )
-    }
-}
-
-struct TabsSection: View {
-    @Environment(SettingsModel.self) private var settings
-    
-    var body: some View {
-        HStack(spacing: 0) {
-            ForEach(SettingsTab.allCases) { tab in
-                TabItem(
-                    tab: tab,
-                    isSelected: settings.selectedTab == tab
-                ) {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        settings.selectedTab = tab
+        SettingsContentView()
+            .background(Color(NSColor.windowBackgroundColor))
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    HStack(spacing: 0) {
+                        ForEach(SettingsTab.allCases) { tab in
+                            ToolbarTabItem(
+                                tab: tab,
+                                isSelected: settings.selectedTab == tab
+                            ) {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    settings.selectedTab = tab
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 20)
-        .frame(maxWidth: .infinity)
     }
 }
 
-struct TabItem: View {
+struct ToolbarTabItem: View {
     let tab: SettingsTab
     let isSelected: Bool
     let action: () -> Void
@@ -81,26 +54,26 @@ struct TabItem: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(backgroundGradient)
-                        .frame(width: 42, height: 42)
+                        .frame(width: 32, height: 32)
                         .shadow(color: shadowColor, radius: shadowRadius, x: 0, y: shadowOffset)
                     
                     Image(systemName: tab.icon)
-                        .font(.system(size: 18, weight: .medium))
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundColor(iconColor)
                 }
                 
                 Text(tab.rawValue)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundColor(textColor)
                     .lineLimit(1)
             }
         }
         .buttonStyle(.plain)
-        .frame(maxWidth: .infinity)
+        .frame(width: 80)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovered = hovering
@@ -144,7 +117,7 @@ struct TabItem: View {
     }
     
     private var shadowRadius: CGFloat {
-        isSelected ? 3 : 1
+        isSelected ? 2 : 1
     }
     
     private var shadowOffset: CGFloat {
