@@ -25,28 +25,59 @@ struct SettingsWindow: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        SettingsContentView()
-            .background(Color(NSColor.windowBackgroundColor))
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    HStack(spacing: 0) {
-                        ForEach(SettingsTab.allCases) { tab in
-                            ToolbarTabItem(
-                                tab: tab,
-                                isSelected: settings.selectedTab == tab
-                            ) {
-                                withAnimation(.easeInOut(duration: 0.25)) {
-                                    settings.selectedTab = tab
-                                }
-                            }
+        VStack(spacing: 0) {
+            ExtendedTitleBarWithTabs()
+            
+            ContentArea()
+        }
+        .background(Color(NSColor.windowBackgroundColor))
+    }
+}
+
+struct ExtendedTitleBarWithTabs: View {
+    @Environment(SettingsModel.self) private var settings
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            // Title area
+            HStack {
+                Spacer()
+                
+                Text("Settings")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(.primary)
+                
+                Spacer()
+            }
+            .padding(.top, 12)
+            .padding(.bottom, 8)
+            
+            // Tabs area
+            HStack(spacing: 32) {
+                ForEach(SettingsTab.allCases) { tab in
+                    TitleBarTab(
+                        tab: tab,
+                        isSelected: settings.selectedTab == tab
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            settings.selectedTab = tab
                         }
                     }
                 }
             }
+            .padding(.bottom, 16)
+        }
+        .background(.regularMaterial, in: Rectangle())
+        .overlay(
+            Rectangle()
+                .fill(Color(NSColor.separatorColor))
+                .frame(height: 0.5),
+            alignment: .bottom
+        )
     }
 }
 
-struct ToolbarTabItem: View {
+struct TitleBarTab: View {
     let tab: SettingsTab
     let isSelected: Bool
     let action: () -> Void
@@ -56,24 +87,29 @@ struct ToolbarTabItem: View {
         Button(action: action) {
             VStack(spacing: 6) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(backgroundGradient)
-                        .frame(width: 32, height: 32)
-                        .shadow(color: shadowColor, radius: shadowRadius, x: 0, y: shadowOffset)
+                    if isSelected {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.accentColor)
+                            .frame(width: 40, height: 40)
+                    } else if isHovered {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray.opacity(0.15))
+                            .frame(width: 40, height: 40)
+                    }
                     
                     Image(systemName: tab.icon)
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(iconColor)
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(isSelected ? .white : .primary)
+                        .frame(width: 40, height: 40)
                 }
                 
                 Text(tab.rawValue)
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(textColor)
+                    .foregroundColor(isSelected ? .accentColor : .secondary)
                     .lineLimit(1)
             }
         }
         .buttonStyle(.plain)
-        .frame(width: 80)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovered = hovering
@@ -81,297 +117,30 @@ struct ToolbarTabItem: View {
         }
         .help("\(tab.rawValue) Settings")
     }
-    
-    private var backgroundGradient: LinearGradient {
-        if isSelected {
-            return LinearGradient(
-                colors: [Color.accentColor, Color.accentColor.opacity(0.8)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        } else if isHovered {
-            return LinearGradient(
-                colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.25)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        } else {
-            return LinearGradient(
-                colors: [Color.gray.opacity(0.08), Color.gray.opacity(0.12)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
-    }
-    
-    private var iconColor: Color {
-        isSelected ? .white : .primary
-    }
-    
-    private var textColor: Color {
-        isSelected ? .accentColor : .primary
-    }
-    
-    private var shadowColor: Color {
-        isSelected ? Color.accentColor.opacity(0.3) : Color.black.opacity(0.1)
-    }
-    
-    private var shadowRadius: CGFloat {
-        isSelected ? 2 : 1
-    }
-    
-    private var shadowOffset: CGFloat {
-        isSelected ? 1 : 0.5
-    }
 }
 
-struct SettingsContentView: View {
+struct ContentArea: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        Group {
-            switch settings.selectedTab {
-            case .general:
-                GeneralSettingsView()
-            case .recording:
-                RecordingSettingsView()
-            case .camera:
-                CameraSettingsView()
+        ZStack {
+            Color(NSColor.textBackgroundColor)
+            
+            VStack(spacing: 20) {
+                Text("Content for \(settings.selectedTab.rawValue)")
+                    .font(.title2)
+                    .foregroundColor(.primary)
+                
+                Text("This is where the \(settings.selectedTab.rawValue.lowercased()) settings content will go.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
             }
+            .padding(40)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(NSColor.textBackgroundColor))
-        .transition(.opacity.combined(with: .scale(scale: 0.95)))
-    }
-}
-
-struct GeneralSettingsView: View {
-    @Environment(SettingsModel.self) private var settings
-    
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                HeaderSection(
-                    title: "General Settings",
-                    description: "Configure general application preferences and behaviors."
-                )
-                
-                SettingsGroup(title: "Appearance") {
-                    SettingsRow(label: "Theme") {
-                        Picker("Theme", selection: .constant("System")) {
-                            Text("Light").tag("Light")
-                            Text("Dark").tag("Dark")
-                            Text("System").tag("System")
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(width: 200)
-                    }
-                    
-                    SettingsRow(label: "Window Style") {
-                        Picker("Window Style", selection: .constant("Modern")) {
-                            Text("Classic").tag("Classic")
-                            Text("Modern").tag("Modern")
-                        }
-                        .pickerStyle(.menu)
-                        .frame(width: 120)
-                    }
-                }
-                
-                SettingsGroup(title: "Behavior") {
-                    SettingsRow(label: "Launch at Login") {
-                        Toggle("", isOn: .constant(false))
-                    }
-                    
-                    SettingsRow(label: "Show in Menu Bar") {
-                        Toggle("", isOn: .constant(true))
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding(32)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-}
-
-struct RecordingSettingsView: View {
-    @Environment(SettingsModel.self) private var settings
-    
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                HeaderSection(
-                    title: "Recording Settings",
-                    description: "Adjust video and audio recording parameters."
-                )
-                
-                SettingsGroup(title: "Video Quality") {
-                    SettingsRow(label: "Resolution") {
-                        Picker("Resolution", selection: .constant("1080p")) {
-                            Text("720p").tag("720p")
-                            Text("1080p").tag("1080p")
-                            Text("4K").tag("4K")
-                        }
-                        .pickerStyle(.menu)
-                        .frame(width: 100)
-                    }
-                    
-                    SettingsRow(label: "Frame Rate") {
-                        Picker("Frame Rate", selection: .constant("30")) {
-                            Text("24 fps").tag("24")
-                            Text("30 fps").tag("30")
-                            Text("60 fps").tag("60")
-                        }
-                        .pickerStyle(.menu)
-                        .frame(width: 100)
-                    }
-                }
-                
-                SettingsGroup(title: "Audio") {
-                    SettingsRow(label: "Record Audio") {
-                        Toggle("", isOn: .constant(true))
-                    }
-                    
-                    SettingsRow(label: "Audio Quality") {
-                        Picker("Audio Quality", selection: .constant("High")) {
-                            Text("Low").tag("Low")
-                            Text("Medium").tag("Medium")
-                            Text("High").tag("High")
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(width: 200)
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding(32)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-}
-
-struct CameraSettingsView: View {
-    @Environment(SettingsModel.self) private var settings
-    
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                HeaderSection(
-                    title: "Camera Settings",
-                    description: "Configure camera overlay and positioning options."
-                )
-                
-                SettingsGroup(title: "Camera Position") {
-                    SettingsRow(label: "Position") {
-                        Picker("Position", selection: .constant("Top Right")) {
-                            Text("Top Left").tag("Top Left")
-                            Text("Top Right").tag("Top Right")
-                            Text("Bottom Left").tag("Bottom Left")
-                            Text("Bottom Right").tag("Bottom Right")
-                        }
-                        .pickerStyle(.menu)
-                        .frame(width: 140)
-                    }
-                    
-                    SettingsRow(label: "Size") {
-                        Slider(value: .constant(0.5), in: 0.1...1.0) {
-                            Text("Size")
-                        }
-                        .frame(width: 200)
-                    }
-                }
-                
-                SettingsGroup(title: "Overlay Style") {
-                    SettingsRow(label: "Shape") {
-                        Picker("Shape", selection: .constant("Circle")) {
-                            Text("Circle").tag("Circle")
-                            Text("Rectangle").tag("Rectangle")
-                            Text("Rounded Rectangle").tag("Rounded Rectangle")
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(width: 280)
-                    }
-                    
-                    SettingsRow(label: "Border") {
-                        Toggle("", isOn: .constant(true))
-                    }
-                }
-                
-                Spacer()
-            }
-            .padding(32)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-}
-
-struct HeaderSection: View {
-    let title: String
-    let description: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundColor(.primary)
-            
-            Text(description)
-                .font(.system(size: 14))
-                .foregroundColor(.secondary)
-                .lineLimit(2)
-        }
-    }
-}
-
-struct SettingsGroup<Content: View>: View {
-    let title: String
-    let content: Content
-    
-    init(title: String, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.content = content()
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text(title)
-                .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.primary)
-            
-            VStack(spacing: 12) {
-                content
-            }
-        }
-    }
-}
-
-struct SettingsRow<Content: View>: View {
-    let label: String
-    let content: Content
-    
-    init(label: String, @ViewBuilder content: () -> Content) {
-        self.label = label
-        self.content = content()
-    }
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .font(.system(size: 14))
-                .foregroundColor(.primary)
-                .frame(width: 120, alignment: .leading)
-            
-            Spacer()
-            
-            content
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color(NSColor.controlBackgroundColor))
-        )
+        .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
 }
