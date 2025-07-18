@@ -11,15 +11,15 @@ struct SettingsView: View {
     var body: some View {
         TabView {
             Tab("General", systemImage: "gearshape.fill") {
-                GeneralSettingsView()
+                GeneralPreference()
             }
             
             Tab("Recording", systemImage: "rectangle.dashed.badge.record") {
-                GeneralSettingsView()
+                RecordingPreference()
             }
             
             Tab("Camera", systemImage: "video") {
-                GeneralSettingsView()
+                CameraPreference()
             }
         }
         .background(.ultraThinMaterial)

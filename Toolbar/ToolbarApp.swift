@@ -23,14 +23,13 @@ struct ToolbarApp: App {
                 .environment(settingsModel)
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 500, height: 400)
         .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.expanded)
         
         Settings {
             SettingsView()
                 .environment(settingsModel)
         }
-        .windowStyle(.hiddenTitleBar)
     }
 }
 

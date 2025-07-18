@@ -25,12 +25,21 @@ struct SettingsWindow: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        HStack(spacing: 0) {
-            Spacer()
-            ExtendedTitleBarWithTabs()
-            Spacer()
+        VStack(spacing: 0) {
+            VStack(spacing: 6) {
+                Text("Settings")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                HStack(spacing: 0) {
+                    Spacer()
+                    ExtendedTitleBarWithTabs()
+                    Spacer()
+                }
+            }
+            .offset(y: -20)
+            .frame(maxWidth: .infinity, maxHeight: 70)
+            ContentArea()
         }
-        .background(Color(NSColor.windowBackgroundColor))
     }
 }
 
@@ -51,13 +60,6 @@ struct ExtendedTitleBarWithTabs: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.bottom, 16)
-        .overlay(
-            Rectangle()
-                .fill(Color(NSColor.separatorColor))
-                .frame(height: 0.5),
-            alignment: .bottom
-        )
     }
 }
 
@@ -112,24 +114,157 @@ struct ContentArea: View {
     
     var body: some View {
         ZStack {
-            Color(NSColor.textBackgroundColor)
-            
-            VStack(spacing: 20) {
-                Text("Content for \(settings.selectedTab.rawValue)")
-                    .font(.title2)
-                    .foregroundColor(.primary)
-                
-                Text("This is where the \(settings.selectedTab.rawValue.lowercased()) settings content will go.")
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                
-                Spacer()
+            switch settings.selectedTab {
+                case .general: GeneralPreference()
+                case .recording: RecordingPreference()
+                case .camera: CameraPreference()
             }
-            .padding(40)
         }
-        .background(.ultraThinMaterial)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
+}
+
+struct GeneralPreference: View {
+    @State var selectedOption = "Option 1"
+    let options = ["Option 1", "Option 2", "Option 3"]
+    var body: some View {
+        List {
+            PreferenceRow(
+                title: NSLocalizedString("Theme", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+        }
+    }
+}
+
+struct CameraPreference: View {
+    @State var selectedOption = "Option 1"
+    let options = ["Option 1", "Option 2", "Option 3"]
+    var body: some View {
+        List {
+            PreferenceRow(
+                title: NSLocalizedString("Camera", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Resolution", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Frame Rate", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+        }
+    }
+}
+
+struct RecordingPreference: View {
+    @State private var isRecordMicrophoneEnabled = true
+    @State var selectedOption = "Option 1"
+    let options = ["Option 1", "Option 2", "Option 3"]
+    var body: some View {
+        List {
+            PreferenceRow(
+                title: NSLocalizedString("Record Microphone", comment: "")
+            ) {
+                SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Record System Audio", comment: "")
+            ) {
+                SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Record System Audio", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Start / Stop Recording", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+            
+            PreferenceRow(
+                title: NSLocalizedString("Pause / Resume Recording", comment: "")
+            ) {
+                SupaVdoPicker(
+                    selection: $selectedOption,
+                    options: options,
+                    displayName: { $0 },
+                    onSelect: { _ in }
+                )
+            }
+        }
+    }
+}
+
+
+
+struct PreferenceRow<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(.footnote.weight(.regular))
+                .foregroundColor(.backgroundInverse.opacity(0.75))
+            Spacer()
+            content
+        }
+        .padding(.vertical, 8)
+        .background(Color.clear)
+    }
+}
+
+
+#Preview {
+    RecordingPreference()
+        .frame(width: 300, height: 200)
 }
