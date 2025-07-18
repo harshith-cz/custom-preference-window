@@ -25,8 +25,45 @@ struct ToolbarApp: App {
         .windowResizability(.contentSize)
         .defaultSize(width: 500, height: 400)
         .windowStyle(.hiddenTitleBar)
+        
+        Settings{
+            SettingsView()
+        }
     }
 
+}
+
+struct SettingsView: View {
+    var body: some View {
+        TabView {
+            Tab("General", systemImage: "gearshape.fill") {
+                GeneralSettingsView()
+            }
+            Tab("Recording", systemImage: "record.circle.fill") {
+                GeneralSettingsView()
+            }
+            Tab("Camera", systemImage: "camera.fill") {
+                GeneralSettingsView()
+            }
+        }
+        .scenePadding()
+        .frame(maxWidth: 350, minHeight: 100)
+    }
+}
+
+struct GeneralSettingsView: View {
+    @AppStorage("showPreview") private var showPreview = true
+    @AppStorage("fontSize") private var fontSize = 12.0
+
+
+    var body: some View {
+        Form {
+            Toggle("Show Previews", isOn: $showPreview)
+            Slider(value: $fontSize, in: 9...96) {
+                Text("Font Size (\(fontSize, specifier: "%.0f") pts)")
+            }
+        }
+    }
 }
 
 struct MainAppView: View {

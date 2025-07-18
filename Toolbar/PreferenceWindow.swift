@@ -140,6 +140,7 @@ struct ContentArea: View {
             }
             .padding(40)
         }
+        .background(.ultraThinMaterial)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
