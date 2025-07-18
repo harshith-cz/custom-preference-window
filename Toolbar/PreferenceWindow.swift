@@ -15,8 +15,8 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .general: return "gearshape.fill"
-        case .recording: return "record.circle.fill"
-        case .camera: return "camera.fill"
+        case .recording: return "rectangle.dashed.badge.record"
+        case .camera: return "video"
         }
     }
 }
@@ -25,10 +25,10 @@ struct SettingsWindow: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        VStack(spacing: 0) {
+        HStack(spacing: 0) {
+            Spacer()
             ExtendedTitleBarWithTabs()
-            
-            ContentArea()
+            Spacer()
         }
         .background(Color(NSColor.windowBackgroundColor))
     }
@@ -38,36 +38,20 @@ struct ExtendedTitleBarWithTabs: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Title area
-            HStack {
-                Spacer()
-                
-                Text("Settings")
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.primary)
-                
-                Spacer()
-            }
-            .padding(.top, 12)
-            .padding(.bottom, 8)
-            
-            // Tabs area
-            HStack(spacing: 32) {
-                ForEach(SettingsTab.allCases) { tab in
-                    TitleBarTab(
-                        tab: tab,
-                        isSelected: settings.selectedTab == tab
-                    ) {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            settings.selectedTab = tab
-                        }
+        HStack(spacing: 2) {
+            ForEach(SettingsTab.allCases) { tab in
+                TitleBarTab(
+                    tab: tab,
+                    isSelected: settings.selectedTab == tab
+                ) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        settings.selectedTab = tab
                     }
                 }
             }
-            .padding(.bottom, 16)
         }
-        .background(.regularMaterial, in: Rectangle())
+        .frame(maxWidth: .infinity)
+        .padding(.bottom, 16)
         .overlay(
             Rectangle()
                 .fill(Color(NSColor.separatorColor))
@@ -86,28 +70,19 @@ struct TitleBarTab: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 6) {
-                ZStack {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.accentColor)
-                            .frame(width: 40, height: 40)
-                    } else if isHovered {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.gray.opacity(0.15))
-                            .frame(width: 40, height: 40)
-                    }
-                    
-                    Image(systemName: tab.icon)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(isSelected ? .white : .primary)
-                        .frame(width: 40, height: 40)
-                }
+                Image(systemName: tab.icon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(isSelected ? .primaryOrange : .textPrimary)
                 
                 Text(tab.rawValue)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(isSelected ? .accentColor : .secondary)
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(isSelected ? .primaryOrange : .textPrimary)
                     .lineLimit(1)
+                
             }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .onHover { hovering in
@@ -115,7 +90,20 @@ struct TitleBarTab: View {
                 isHovered = hovering
             }
         }
-        .help("\(tab.rawValue) Settings")
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background {
+            ZStack {
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(.black.opacity(0.25))
+                    
+                } else if isHovered {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.gray.opacity(0.15))
+                }
+            }
+        }
     }
 }
 
