@@ -14,7 +14,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     
     var icon: String {
         switch self {
-        case .general: return "gearshape.fill"
+        case .general: return "gear"
         case .recording: return "rectangle.dashed.badge.record"
         case .camera: return "video"
         }
@@ -31,13 +31,15 @@ struct SettingsWindow: View {
                 ExtendedTitleBarWithTabs()
                 Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: 70)
+            .frame(maxWidth: .infinity)
+            .frame(height: 70)
             .background(.toolbarBg)
             
             ContentArea()
                 .background(.ultraThinMaterial)
         }
-        .frame(width: 600, height: 450)
+        .frame(width: 500)
+        .fixedSize(horizontal: true, vertical: true)
     }
 }
 
@@ -74,11 +76,11 @@ struct TitleBarTab: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(isSelected ? .primaryOrange : .textPrimary)
+                    .foregroundColor(isSelected ? .primaryOrange : .backgroundInverse.opacity(0.48))
                 
                 Text(tab.rawValue)
                     .font(.caption2.weight(.medium))
-                    .foregroundColor(isSelected ? .primaryOrange : .textPrimary)
+                    .foregroundColor(isSelected ? .primaryOrange : .backgroundInverse.opacity(0.48))
                     .lineLimit(1)
                 
             }
@@ -111,18 +113,17 @@ struct ContentArea: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        ScrollView {
-            Group {
-                switch settings.selectedTab {
-                    case .general: GeneralPreference()
-                    case .recording: RecordingPreference()
-                    case .camera: CameraPreference()
-                }
+        Group {
+            switch settings.selectedTab {
+                case .general: GeneralPreference()
+                case .recording: RecordingPreference()
+                case .camera: CameraPreference()
             }
-            .padding(.horizontal, 70)
-            .padding(.vertical, 30)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 70)
+        .padding(.vertical, 30)
+        .frame(maxWidth: .infinity)
+        .animation(.easeInOut(duration: 0.3), value: settings.selectedTab)
     }
 }
 

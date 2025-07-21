@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     var body: some View {
         TabView {
-            Tab("General", systemImage: "gearshape.fill") {
+            Tab("General", systemImage: "gear") {
                 GeneralPreference()
             }
             
