@@ -125,8 +125,9 @@ struct ContentArea: View {
 struct GeneralPreference: View {
     @State var selectedOption = "Option 1"
     let options = ["Option 1", "Option 2", "Option 3"]
+
     var body: some View {
-        List {
+        VStack(alignment: .leading, spacing: 0) {
             PreferenceRow(
                 title: NSLocalizedString("Theme", comment: "")
             ) {
@@ -137,19 +138,19 @@ struct GeneralPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
+            Spacer()
         }
-        .frame(maxHeight: 250)
-        .scrollContentBackground(.hidden)
-//        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 struct CameraPreference: View {
     @State var selectedOption = "Option 1"
     let options = ["Option 1", "Option 2", "Option 3"]
+    let options2 = ["30 fps", "60 fps"]
+
     var body: some View {
-        List {
+        VStack(alignment: .leading, spacing: 0) {
             PreferenceRow(
                 title: NSLocalizedString("Camera", comment: "")
             ) {
@@ -160,8 +161,8 @@ struct CameraPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Resolution", comment: "")
             ) {
@@ -172,23 +173,22 @@ struct CameraPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Frame Rate", comment: "")
             ) {
-                SupaVdoPicker(
+                SupaVdoRadioPicker(
                     selection: $selectedOption,
-                    options: options,
+                    options: options2,
                     displayName: { $0 },
                     onSelect: { _ in }
                 )
+                
             }
-            .listRowBackground(Color.clear)
+            Spacer()
         }
-        .frame(maxHeight: 250)
-        .scrollContentBackground(.hidden)
-//        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -196,22 +196,23 @@ struct RecordingPreference: View {
     @State private var isRecordMicrophoneEnabled = true
     @State var selectedOption = "Option 1"
     let options = ["Option 1", "Option 2", "Option 3"]
+
     var body: some View {
-        List {
+        VStack(alignment: .leading, spacing: 0) {
             PreferenceRow(
                 title: NSLocalizedString("Record Microphone", comment: "")
             ) {
                 SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Record System Audio", comment: "")
             ) {
                 SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Record System Audio", comment: "")
             ) {
@@ -222,8 +223,8 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Start / Stop Recording", comment: "")
             ) {
@@ -234,8 +235,8 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
-            
+            Divider()
+
             PreferenceRow(
                 title: NSLocalizedString("Pause / Resume Recording", comment: "")
             ) {
@@ -246,11 +247,9 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
-            .listRowBackground(Color.clear)
+            Spacer()
         }
-        .frame(maxHeight: 250)
-        .scrollContentBackground(.hidden)
-//        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

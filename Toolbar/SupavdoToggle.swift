@@ -75,6 +75,42 @@ struct SupaVdoPicker<T: Hashable>: View {
     }
 }
 
+struct SupaVdoRadioPicker<T: Hashable>: View {
+    @Binding var selection: T
+    let options: [T]
+    let displayName: (T) -> String
+    let onSelect: (T) -> Void
+
+    init(
+        selection: Binding<T>,
+        options: [T],
+        displayName: @escaping (T) -> String,
+        onSelect: @escaping (T) -> Void
+    ) {
+        self._selection = selection
+        self.options = options
+        self.displayName = displayName
+        self.onSelect = onSelect
+    }
+
+    var body: some View {
+        Picker("", selection: $selection) {
+            ForEach(options, id: \.self) { option in
+                Text(displayName(option))
+                    .font(.footnote.weight(.regular))
+                    .foregroundColor(.white.opacity(0.85))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+        }
+        .frame(maxWidth: 200)
+        .labelsHidden()
+        .buttonStyle(.plain)
+        .pickerStyle(.radioGroup)
+        .fixedSize()
+    }
+}
+
 #Preview {
     @Previewable @State var selectedOption = "Option 1"
     let options = ["Option 1", "Option 2", "Option 3"]
