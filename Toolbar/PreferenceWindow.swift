@@ -14,7 +14,7 @@ enum SettingsTab: String, CaseIterable, Identifiable {
     
     var icon: String {
         switch self {
-        case .general: return "gear"
+        case .general: return "gearshape.fill"
         case .recording: return "rectangle.dashed.badge.record"
         case .camera: return "video"
         }
@@ -25,21 +25,15 @@ struct SettingsWindow: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Spacer()
-                ExtendedTitleBarWithTabs()
-                Spacer()
+        ContentArea()
+            .frame(width: 600)
+            .fixedSize(horizontal: true, vertical: true)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    ExtendedTitleBarWithTabs()
+                }
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 70)
-            .background(.toolbarBg)
-            
-            ContentArea()
-                .background(.ultraThinMaterial)
-        }
-        .frame(width: 500)
-        .fixedSize(horizontal: true, vertical: true)
+            .background(.ultraThinMaterial)
     }
 }
 
@@ -59,7 +53,6 @@ struct ExtendedTitleBarWithTabs: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity)
     }
 }
 
@@ -71,19 +64,17 @@ struct TitleBarTab: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 6) {
+            VStack(spacing: 4) {
                 Image(systemName: tab.icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(isSelected ? .primaryOrange : .backgroundInverse.opacity(0.48))
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(isSelected ? .accentColor : .primary)
                 
                 Text(tab.rawValue)
-                    .font(.caption2.weight(.medium))
-                    .foregroundColor(isSelected ? .primaryOrange : .backgroundInverse.opacity(0.48))
+                    .font(.caption.weight(.medium))
+                    .foregroundColor(isSelected ? .accentColor : .primary)
                     .lineLimit(1)
-                
             }
+            .frame(minWidth: 60)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -92,18 +83,15 @@ struct TitleBarTab: View {
                 isHovered = hovering
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
+        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
         .background {
-            ZStack {
-                if isSelected {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(.black.opacity(0.25))
-                    
-                } else if isHovered {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.gray.opacity(0.15))
-                }
+            if isSelected {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(.selection)
+            } else if isHovered {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(.primary.opacity(0.1))
             }
         }
     }
@@ -120,10 +108,10 @@ struct ContentArea: View {
                 case .camera: CameraPreference()
             }
         }
-        .padding(.horizontal, 70)
-        .padding(.vertical, 30)
+        .padding(.horizontal, 40)
+        .padding(.vertical, 20)
         .frame(maxWidth: .infinity)
-        .animation(.easeInOut(duration: 0.3), value: settings.selectedTab)
+        .animation(.easeInOut(duration: 0.25), value: settings.selectedTab)
     }
 }
 
@@ -268,7 +256,7 @@ struct PreferenceRow<Content: View>: View {
         HStack {
             Text(title)
                 .font(.footnote.weight(.regular))
-                .foregroundColor(.backgroundInverse.opacity(0.75))
+                .foregroundColor(.secondary)
             Spacer()
             content
         }
