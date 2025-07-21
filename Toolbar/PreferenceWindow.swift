@@ -26,19 +26,15 @@ struct SettingsWindow: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 6) {
-                Text("Settings")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                HStack(spacing: 0) {
-                    Spacer()
-                    ExtendedTitleBarWithTabs()
-                    Spacer()
-                }
+            HStack(spacing: 0) {
+                Spacer()
+                ExtendedTitleBarWithTabs()
+                Spacer()
             }
-            .offset(y: -20)
             .frame(maxWidth: .infinity, maxHeight: 70)
+            .background(.toolbarBg)
             ContentArea()
+                .background(.ultraThinMaterial)
         }
     }
 }
@@ -120,6 +116,7 @@ struct ContentArea: View {
                 case .camera: CameraPreference()
             }
         }
+        .padding(.horizontal, 70)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
@@ -140,7 +137,11 @@ struct GeneralPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
         }
+        .frame(maxHeight: 250)
+        .scrollContentBackground(.hidden)
+//        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -159,6 +160,7 @@ struct CameraPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Resolution", comment: "")
@@ -170,6 +172,7 @@ struct CameraPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Frame Rate", comment: "")
@@ -181,7 +184,11 @@ struct CameraPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
         }
+        .frame(maxHeight: 250)
+        .scrollContentBackground(.hidden)
+//        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -196,12 +203,14 @@ struct RecordingPreference: View {
             ) {
                 SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Record System Audio", comment: "")
             ) {
                 SupavdoToggle(isActive: $isRecordMicrophoneEnabled)
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Record System Audio", comment: "")
@@ -213,6 +222,7 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Start / Stop Recording", comment: "")
@@ -224,6 +234,7 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
             
             PreferenceRow(
                 title: NSLocalizedString("Pause / Resume Recording", comment: "")
@@ -235,7 +246,11 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
+            .listRowBackground(Color.clear)
         }
+        .frame(maxHeight: 250)
+        .scrollContentBackground(.hidden)
+//        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

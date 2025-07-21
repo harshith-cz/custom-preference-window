@@ -21,10 +21,10 @@ struct ToolbarApp: App {
         Window("Settings", id: "settings") {
             SettingsWindow()
                 .environment(settingsModel)
+                .containerBackground(.ultraThinMaterial, for: .window)
+                .toolbarBackground(.toolbarBg, for: .windowToolbar)
         }
         .windowResizability(.contentSize)
-        .windowStyle(.hiddenTitleBar)
-        .windowToolbarStyle(.expanded)
         
         Settings {
             SettingsView()
