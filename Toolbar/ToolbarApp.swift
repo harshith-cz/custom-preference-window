@@ -24,6 +24,8 @@ struct ToolbarApp: App {
                 .containerBackground(.ultraThinMaterial, for: .window)
                 .toolbarBackground(.toolbarBg, for: .windowToolbar)
         }
+        .windowResizability(.contentSize)
+        .defaultSize(width: 600, height: 450)
         
         Settings {
             SettingsView()

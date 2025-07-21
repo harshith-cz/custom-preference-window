@@ -33,9 +33,11 @@ struct SettingsWindow: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 70)
             .background(.toolbarBg)
+            
             ContentArea()
                 .background(.ultraThinMaterial)
         }
+        .frame(width: 600, height: 450)
     }
 }
 
@@ -109,16 +111,18 @@ struct ContentArea: View {
     @Environment(SettingsModel.self) private var settings
     
     var body: some View {
-        ZStack {
-            switch settings.selectedTab {
-                case .general: GeneralPreference()
-                case .recording: RecordingPreference()
-                case .camera: CameraPreference()
+        ScrollView {
+            Group {
+                switch settings.selectedTab {
+                    case .general: GeneralPreference()
+                    case .recording: RecordingPreference()
+                    case .camera: CameraPreference()
+                }
             }
+            .padding(.horizontal, 70)
+            .padding(.vertical, 30)
         }
-        .padding(.horizontal, 70)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
 }
 
@@ -138,7 +142,6 @@ struct GeneralPreference: View {
                     onSelect: { _ in }
                 )
             }
-            Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -186,7 +189,6 @@ struct CameraPreference: View {
                 )
                 
             }
-            Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -247,13 +249,10 @@ struct RecordingPreference: View {
                     onSelect: { _ in }
                 )
             }
-            Spacer()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
-
-
 
 struct PreferenceRow<Content: View>: View {
     let title: String
@@ -273,12 +272,10 @@ struct PreferenceRow<Content: View>: View {
             content
         }
         .padding(.vertical, 8)
-        .background(Color.clear)
     }
 }
 
-
 #Preview {
-    RecordingPreference()
-        .frame(width: 300, height: 200)
+    SettingsWindow()
+        .environment(SettingsModel())
 }
