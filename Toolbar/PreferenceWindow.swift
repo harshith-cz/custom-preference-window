@@ -26,16 +26,17 @@ struct SettingsWindow: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Spacer()
-                ExtendedTitleBarWithTabs()
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 70)
-            .background(.toolbarBg)
-            
             ContentArea()
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        HStack(spacing: 0) {
+                            Spacer()
+                            ExtendedTitleBarWithTabs()
+                            Spacer()
+                        }
+                        .background(.toolbarBg)
+                    }
+                }
                 .background(.ultraThinMaterial)
         }
         .frame(width: 500)

@@ -23,7 +23,14 @@ struct ToolbarApp: App {
                 .environment(settingsModel)
                 .containerBackground(.ultraThinMaterial, for: .window)
                 .toolbarBackground(.toolbarBg, for: .windowToolbar)
+                .onAppear {
+                    // Get the window with ID "settings"
+                    if let window = NSApp.windows.first(where: { $0.identifier?.rawValue == "settings" }) {
+                        window.styleMask.remove(.miniaturizable)
+                    }
+                }
         }
+        .windowToolbarStyle(.expanded)
         .windowResizability(.contentSize)
         
         Settings {
