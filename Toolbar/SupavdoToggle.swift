@@ -78,110 +78,47 @@ struct SupaVdoPicker<T: Hashable>: View {
     }
 
     var body: some View {
-        HStack(spacing: 5) {
-            Menu {
-                ForEach(options, id: \.self) { option in
-                    Button(action: {
-                        selection = option
-                        onSelect(option)
-                    }) {
-                        Spacer()
-                        Text(displayName(option))
-                            .font(.body.monospaced().weight(.regular))
-                            .foregroundStyle(.white.opacity(0.85), .white.opacity(0.85))
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                    }
+        Menu {
+            ForEach(options, id: \.self) { option in
+                Button(action: {
+                    selection = option
+                    onSelect(option)
+                }) {
+                    Spacer()
+                    Text(displayName(option))
+                        .font(.body.weight(.regular))
+                        .foregroundStyle(.backgroundInverse.opacity(0.85), .backgroundInverse.opacity(0.85))
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
-            } label: {
+            }
+        } label: {
+            HStack(spacing: 5) {
                 Text(displayName(selection))
                     .font(.body.weight(.regular))
-                    .foregroundStyle(.white.opacity(0.85), .white.opacity(0.85))
+                    .foregroundStyle(.backgroundInverse.opacity(0.85), .backgroundInverse.opacity(0.85))
                     .lineLimit(1)
                     .truncationMode(.tail)
-                    .frame(width: 50)
+                
+                Image(systemName: "chevron.down")
+                    .font(.caption)
+                    .padding(5)
+                    .background(.backgroundInverse.opacity(0.05))
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
             }
-            .labelsHidden()
-            .buttonStyle(.plain)
-            .pickerStyle(.menu)
-
-            Image(systemName: "chevron.down")
-                .font(.caption)
-                .padding(5)
-                .background(.backgroundInverse.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 5))
+            .padding(.leading, 5)
+            .padding(.trailing, 2)
+            .padding(.vertical, 3)
+            .overlay {
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.backgroundInverse.opacity(0.1), lineWidth: 1)
+            }
         }
-        .frame(width: 80)
-        .padding(.leading)
-        .padding(.trailing, 2)
-        .padding(.vertical, 3)
-        .overlay {
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(Color.backgroundInverse.opacity(0.1), lineWidth: 1)
-        }
+        .labelsHidden()
+        .buttonStyle(.plain)
+        .pickerStyle(.menu)
     }
 }
-
-
-//struct SupaVdoPicker<T: Hashable>: View {
-//    @Binding var selection: T
-//    let options: [T]
-//    let displayName: (T) -> String
-//    let onSelect: (T) -> Void
-//
-//    init(
-//        selection: Binding<T>,
-//        options: [T],
-//        displayName: @escaping (T) -> String,
-//        onSelect: @escaping (T) -> Void
-//    ) {
-//        self._selection = selection
-//        self.options = options
-//        self.displayName = displayName
-//        self.onSelect = onSelect
-//    }
-//
-//    var body: some View {
-//        HStack(spacing: 5) {
-//            Menu {
-//                ForEach(options, id: \.self) { option in
-//                    Button(action: {
-//                        selection = option
-//                        onSelect(option)
-//                    }) {
-//                        Text(displayName(option))
-//                            .font(.body.weight(.regular))
-//                            .foregroundStyle(.white.opacity(0.85))
-//                    }
-//                }
-//            } label: {
-//                Text(displayName(selection))
-//                    .font(.body.weight(.regular))
-//                    .foregroundStyle(.white.opacity(0.85), .white.opacity(0.85))
-//                    .lineLimit(1)
-//                    .truncationMode(.tail)
-//            }
-//            .frame(maxWidth: 200)
-//            .labelsHidden()
-//            .buttonStyle(.plain)
-//            .pickerStyle(.menu)
-//            .fixedSize()
-//
-//            Image(systemName: "chevron.down")
-//                .font(.caption)
-//                .padding(5)
-//                .background(.backgroundInverse.opacity(0.05))
-//                .clipShape(RoundedRectangle(cornerRadius: 5))
-//        }
-//        .padding(.vertical, 3)
-//        .padding(.leading)
-//        .padding(.trailing, 2)
-//        .overlay {
-//            RoundedRectangle(cornerRadius: 5)
-//                .stroke(Color.backgroundInverse.opacity(0.1), lineWidth: 1)
-//        }
-//    }
-//}
 
 struct SupaVdoRadioPicker<T: Hashable>: View {
     @Binding var selection: T
@@ -560,8 +497,8 @@ struct SupaVdoCustomMenuPickerTwo<T: Hashable>: View {
 
 
 #Preview {
-    @Previewable @State var selectedOption = "Option 1"
-    let options = ["Option 1", "Option 2", "Option 3"]
+    @Previewable @State var selectedOption = "Option Option Option 1"
+    let options = ["Option Option Option 1", "Option 2", "Option 3"]
     SupaVdoPicker(
         selection: $selectedOption,
         options: options,

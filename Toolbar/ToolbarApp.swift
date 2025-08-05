@@ -22,7 +22,6 @@ struct ToolbarApp: App {
             SettingsWindow()
                 .environment(settingsModel)
                 .containerBackground(.ultraThinMaterial, for: .window)
-                .toolbarBackground(.toolbarBg, for: .windowToolbar)
                 .onAppear {
                     // Get the window with ID "settings"
                     if let window = NSApp.windows.first(where: { $0.identifier?.rawValue == "settings" }) {

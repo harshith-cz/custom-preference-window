@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D65CEEB92E39F18400AD73F4 /* IconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D65CEEB82E39F18400AD73F4 /* IconButtonView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		D65CEEB82E39F18400AD73F4 /* IconButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButtonView.swift; sourceTree = "<group>"; };
 		D69314712E291C7800355CBC /* Toolbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Toolbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -32,6 +37,7 @@
 		D69314682E291C7800355CBC = {
 			isa = PBXGroup;
 			children = (
+				D65CEEB82E39F18400AD73F4 /* IconButtonView.swift */,
 				D69314732E291C7800355CBC /* Toolbar */,
 				D69314722E291C7800355CBC /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D65CEEB92E39F18400AD73F4 /* IconButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

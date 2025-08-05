@@ -34,7 +34,6 @@ struct SettingsWindow: View {
                             ExtendedTitleBarWithTabs()
                             Spacer()
                         }
-                        .background(.toolbarBg)
                     }
                 }
                 .background(.ultraThinMaterial)
